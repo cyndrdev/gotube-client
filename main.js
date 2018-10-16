@@ -40,33 +40,24 @@ $(function() {
             console.log("search complete");
         });
     });
-    // handler for search result buttons
+
+    // search result button handler 
     resultsParent.on("click", "li button", function () {
         var i = parseInt($(this).attr("id"));
-
-        // var url = `https://youtube.com/watch?v=${id}`;
-        console.log(searchResults[i].id); 
-    });
-
-    $("#queueAdd").click(function() {
-        console.log("clicked boi");
-
         var url = getApiAddress() + "/queue/add";
-        var postData = JSON.stringify({
-            url: "https://www.youtube.com/watch?v=mg2cMqW_hOY"
+        var postData = JSON.stringify({ 
+            id: searchResults[i].id 
         });
 
-        console.log("posting to:\t" + url);
-
         $.post({
-            url: url, 
-            data: postData
+            url: url,
+            data: postData 
         })
         .done(function () {
-            alert("success");
+            console.log("server downloaded: " + searchResults[i].title);
         })
-        .fail(function (xhr) {
-            alert(xhr.statusText);
+        .fail(function () {
+            alert("error");
         });
     });
 
