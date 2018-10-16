@@ -1,4 +1,7 @@
 $(function() {
+    var searchResults = [];
+    var resultsParent = $("#searchResults");
+
     $("#searchButton").click(function() {
         var query = $("#searchQuery").val();
 
@@ -14,23 +17,21 @@ $(function() {
             data: postData
         })
         .done(function (data) {
-            // alert(data);
+            // clear previous results
+            resultsParent.html("");
 
-            var results = JSON.parse(data);
+            searchResults = JSON.parse(data);
 
-            var html = "<ul>";
-            for (var i = 0; i < results.length; i++) {
-                var title = results[i].title;
-                var id = results[i].id;
-
-                html += `
-                    <li>
-                        <a href="https://youtube.com/watch?v=${id}">${title}</a>
-                    </li>`;
+            // create a list element with a button for each result
+            for (var i = 0; i < searchResults.length; i++) {
+                resultsParent
+                    .append($("<li></li>")
+                    .append($("<button/>", 
+                    {
+                        text: searchResults[i].title,
+                        id: i
+                    })));
             }
-            html += "</ul>";
-            
-            $("#searchResults").html(html);
         })
         .fail(function () {
             alert("search failed");
@@ -38,6 +39,13 @@ $(function() {
         .always(function () {
             console.log("search complete");
         });
+    });
+    // handler for search result buttons
+    resultsParent.on("click", "li button", function () {
+        var i = parseInt($(this).attr("id"));
+
+        // var url = `https://youtube.com/watch?v=${id}`;
+        console.log(searchResults[i].id); 
     });
 
     $("#queueAdd").click(function() {
