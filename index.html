@@ -1,24 +1,37 @@
 <!doctype html>
 <html>
+    
   <head>
     <meta charset="utf-8">
       
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="main.js" href="main.js"></script>
   </head>
+
   <body>
+    <h1>server config</h1>
 
     <p>
       <span>server address</span>
       <input type="text" id="serverAddress" value="localhost"/>
     </p>
-    
     <p>
       <span>server port</span>
       <input type="text" id="serverPort" value="8080"/>
     </p>
 
-    <br>
+    <hr>
+
+    <h1>search</h1>
+    <p>
+      <span>query</span>
+      <input type="text" id="searchQuery"/>
+
+      <button type="button" id="searchButton">search</button>
+
+      <p id="searchResults"></p>
+    </p>
+    <hr>
     <button type="button" id="queueAdd">clicky boi</button>
   </body>
 </html>
