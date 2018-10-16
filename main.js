@@ -45,13 +45,10 @@ $(function() {
     resultsParent.on("click", "li button", function () {
         var i = parseInt($(this).attr("id"));
         var url = getApiAddress() + "/queue/add";
-        var postData = JSON.stringify({ 
-            id: searchResults[i].id 
-        });
 
         $.post({
             url: url,
-            data: postData 
+            data: JSON.stringify(searchResults[i]) 
         })
         .done(function () {
             console.log("server downloaded: " + searchResults[i].title);
