@@ -51,12 +51,38 @@ $(function() {
             data: JSON.stringify(searchResults[i]) 
         })
         .done(function () {
-            console.log("server downloaded: " + searchResults[i].title);
+            updateQueueDisplay(); 
         })
         .fail(function () {
             alert("error");
         });
     });
+
+    function updateQueueDisplay() {
+        var url = getApiAddress() + "/queue";
+
+        $.ajax({url: url})
+        .done(function (data) {
+            var queueParent = $("#queueParent");
+            var queue = JSON.parse(data);
+
+            // clear whatever was already there
+            queueParent.html("");
+
+            for (var i = 0; i < queue.length; i++) {
+                console.log(queue[i].title);
+
+                queueParent
+                    .append($("<li></li>",
+                    {
+                        text: queue[i].title
+                    }));
+            }
+        })
+        .fail(function () {
+            alert("error: unable to get queue");
+        });
+    }
 
     function getApiAddress() {
         var address = $("#serverAddress").val();
@@ -64,4 +90,7 @@ $(function() {
 
         return `http://${address}:${port}`;
     }
+
+    // get the queue from the server as soon as the page loads
+    updateQueueDisplay();
 });
