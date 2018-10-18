@@ -65,6 +65,9 @@ $(function() {
         .done(function (data) {
             var queueParent = $("#queueParent");
             var queue = JSON.parse(data);
+            
+            if (!queue) // queue is empty i guess 
+                return;
 
             // clear whatever was already there
             queueParent.html("");
