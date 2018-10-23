@@ -1,6 +1,7 @@
 $(function() {
     var searchResults = [];
     var resultsParent = $("#searchResults");
+    var queueParent = $("#queueParent");
 
     $("#searchButton").click(function() {
         var query = $("#searchQuery").val();
@@ -53,17 +54,37 @@ $(function() {
         .done(function () {
             updateQueueDisplay(); 
         })
-        .fail(function () {
-            alert("error");
+        .fail(function (xhr) {
+            alert(xhr.statusText);
         });
     });
 
+    $("#clearQueue").click(function () {
+        var url = getApiAddress() + "/queue/clear";
+        var postData = { index: -1 };
+
+        console.log(JSON.stringify(postData)); 
+
+        // clear queue display
+        queueParent.html("");
+
+        $.post({ 
+            url: url,
+            data: JSON.stringify(postData)
+        })
+        .done(function () {
+            console.log("server queue cleared"); 
+        })
+        .fail(function (xhr) {
+            alert(xhr.statusText);
+        });
+    });
+    
     function updateQueueDisplay() {
         var url = getApiAddress() + "/queue";
 
         $.ajax({url: url})
         .done(function (data) {
-            var queueParent = $("#queueParent");
             var queue = JSON.parse(data);
             
             if (!queue) // queue is empty i guess 
