@@ -2,6 +2,7 @@ $(function() {
     var searchResults = [];
     var resultsParent = $("#searchResults");
     var queueParent = $("#queueParent");
+    var player;
 
     $("#searchButton").click(function() {
         var query = $("#searchQuery").val();
@@ -102,6 +103,12 @@ $(function() {
                         text: queue[i].title
                     }));
             }
+
+            console.log(queue.length);
+            if (queue.length != 0) {
+                player.load();
+                player.play();
+            }
         })
         .fail(function () {
             alert("error: unable to get queue");
@@ -115,6 +122,44 @@ $(function() {
         return `http://${address}:${port}`;
     }
 
+    function loadNext() {
+        var url = getApiAddress() + "/queue/next";
+
+        $.post({url:url})
+        .done(function() { 
+            updateQueueDisplay();
+    
+            player.pause();
+            player.remove();
+
+            initPlayer();
+
+            player.load();
+            player.play();
+        })
+        .fail(function() {
+            alert("unable to load next");
+        });
+    }
+
+    function initPlayer() {
+        var pElement = $("#player");
+
+        pElement.mediaelementplayer({
+            success: function (media, node, instance) {
+                console.log(media);
+                console.log(node);
+                console.log(instance);
+            }
+        });
+        pElement.on("ended", function() {
+            loadNext();
+        });
+
+        player = mejs.players["mep_0"];
+    }
+
     // get the queue from the server as soon as the page loads
+    initPlayer();
     updateQueueDisplay();
 });
