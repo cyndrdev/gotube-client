@@ -2,7 +2,10 @@ $(function() {
     var searchResults = [];
     var resultsParent = $("#searchResults");
     var queueParent = $("#queueParent");
-    var player;
+
+    var player = null;
+    var queue = [];
+    var autoplayNext = false;
 
     $("#searchButton").click(function() {
         var query = $("#searchQuery").val();
@@ -53,7 +56,9 @@ $(function() {
             data: JSON.stringify(searchResults[i]) 
         })
         .done(function () {
-            updateQueueDisplay(); 
+            autoplayNext = false;
+            updateQueue(); 
+            autoplayNext = true;
         })
         .fail(function (xhr) {
             alert(xhr.statusText);
@@ -81,14 +86,14 @@ $(function() {
         });
     });
     
-    function updateQueueDisplay() {
+    function updateQueue() {
         var url = getApiAddress() + "/queue";
 
         $.ajax({url: url})
         .done(function (data) {
-            var queue = JSON.parse(data);
+            queue = JSON.parse(data);
             
-            if (!queue) // queue is empty i guess 
+            if (!queue || !queue.length) // queue is empty i guess 
                 return;
 
             // clear whatever was already there
@@ -104,11 +109,10 @@ $(function() {
                     }));
             }
 
-            console.log(queue.length);
-            if (queue.length != 0) {
-                player.load();
-                player.play();
-            }
+            console.log("queue loaded of length: " + queue.length);
+            console.log(player);
+
+            playTop();
         })
         .fail(function () {
             alert("error: unable to get queue");
@@ -127,31 +131,68 @@ $(function() {
 
         $.post({url:url})
         .done(function() { 
-            updateQueueDisplay();
-    
-            player.pause();
-            player.remove();
-
-            initPlayer();
-
-            player.load();
-            player.play();
+            updateQueue();
         })
         .fail(function() {
             alert("unable to load next");
         });
     }
 
+    function playTop() {
+        if (!queue || !queue.length)
+            return;
+
+        console.log(player.paused);
+        console.log(player.ended);
+        
+        if (!autoplayNext)
+            return;
+
+        var apiAddr = getApiAddress();
+        var idUrl = apiAddr + "/queue/top";
+        
+        // first get the id of the song at the top of the queue
+        $.ajax({url:idUrl})
+        .done(function (data) {
+            console.log(data);
+
+            // then play the song with that id
+            player.setSrc(apiAddr + "/stream/" + data);
+            player.load();
+            player.play();
+        })
+        .fail(function () {
+            alert("unable to get queue top");
+        });
+    }
+
     function initPlayer() {
+        var playerParent = $("#playerParent");
+
+        // destroy any existing player
+        if (player) {
+            player.pause();
+            player.remove();
+        }
+        playerParent.html("");
+
+        playerParent
+            .append($("<audio></audio>",
+                {
+                    preload: "none",
+                    type: "audio/webm",
+                    controls: true,
+                    id: "player"
+                }));
+
         var pElement = $("#player");
 
         pElement.mediaelementplayer({
             success: function (media, node, instance) {
-                console.log(media);
-                console.log(node);
-                console.log(instance);
+                console.log("player loaded");
             }
         });
+
         pElement.on("ended", function() {
             loadNext();
         });
@@ -159,7 +200,8 @@ $(function() {
         player = mejs.players["mep_0"];
     }
 
+    autoplayNext = true;
     // get the queue from the server as soon as the page loads
+    updateQueue();
     initPlayer();
-    updateQueueDisplay();
 });
