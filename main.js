@@ -5,7 +5,7 @@ $(function() {
 
     var player = null;
     var queue = [];
-    var autoplayNext = false;
+    var playing = false;
 
     $("#searchButton").click(function() {
         var query = $("#searchQuery").val();
@@ -56,9 +56,7 @@ $(function() {
             data: JSON.stringify(searchResults[i]) 
         })
         .done(function () {
-            autoplayNext = false;
             updateQueue(); 
-            autoplayNext = true;
         })
         .fail(function (xhr) {
             alert(xhr.statusText);
@@ -142,10 +140,7 @@ $(function() {
         if (!queue || !queue.length)
             return;
 
-        console.log(player.paused);
-        console.log(player.ended);
-        
-        if (!autoplayNext)
+        if (playing)
             return;
 
         var apiAddr = getApiAddress();
@@ -160,6 +155,7 @@ $(function() {
             player.setSrc(apiAddr + "/stream/" + data);
             player.load();
             player.play();
+            playing = true;
         })
         .fail(function () {
             alert("unable to get queue top");
@@ -194,6 +190,7 @@ $(function() {
         });
 
         pElement.on("ended", function() {
+            playing = false;
             loadNext();
         });
 
