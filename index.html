@@ -1,53 +1,45 @@
 <!doctype html>
 <html>
-    
-  <head>
-    <meta charset="utf-8">
-      
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="main.js" href="main.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/mediaelement/4.2.9/mediaelement-and-player.min.js"></script>
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mediaelement/4.2.9/mediaelementplayer.min.css"/>
+    <head>
+        <meta charset="utf-8">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="main.js" href="main.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mediaelement/4.2.9/mediaelement-and-player.min.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mediaelement/4.2.9/mediaelementplayer.min.css" />
+        <link rel="stylesheet" href="styles.css" />
+    </head>
+    <body>
+        <section class="config">
+            <h1>server config</h1>
+            <p>
+                <span>server ip</span>
+                <input type="text" id="serverAddress" value="localhost"/>
+            </p>
+            <p>
+                <span>server port</span>
+                <input type="text" id="serverPort" value="8080"/>
+            </p>
+        </section>
 
-  </head>
+        <section class="search">
+            <h1>search</h1>
+            <p>
+                <span>query</span>
+                <input type="text" id="searchQuery"/>
+                <button type="button" id="searchButton">search</button>
+                <ul id="searchResults"></ul>
+            </p>
+        </section>
 
-  <body>
-    <h1>server config</h1>
-
-    <p>
-      <span>server ip</span>
-      <input type="text" id="serverAddress" value="localhost"/>
-    </p>
-    <p>
-      <span>server port</span>
-      <input type="text" id="serverPort" value="8080"/>
-    </p>
-
-    <hr>
-
-    <h1>search</h1>
-    <p>
-      <span>query</span>
-      <input type="text" id="searchQuery"/>
-
-      <button type="button" id="searchButton">search</button>
-
-      <ul id="searchResults"></ul>
-    </p>
-    <hr>
-
-    <h1>queue</h1>
-
-    <ul id="queueParent"></ul>
-
-    <button type="button" id="clearQueue">clear</button> 
-
-    <hr>
-
-    <div id="playerParent"></div>
-    <!-- <audio controls id="player" preload="none" type="audio/webm"></audio> -->
-
-    <hr>
-  </body>
+        <section class="queue">
+            <h1>queue</h1>
+            <ul id="queueParent"></ul>
+            <button type="button" id="clearQueue">clear</button> 
+            <!-- <audio controls id="player" preload="none" type="audio/webm"></audio> -->
+        </section>
+        
+        <section class="player">
+            <div id="playerParent"></div>
+        </section>
+    </body>
 </html>
