@@ -14,13 +14,22 @@ body {
     margin: 0;
 }
 
+/* player */
+
+section.player {
+    position: fixed;
+    bottom: 0;
+    right: 1.5rem;
+    padding: 0;
+}
+
 /* ==== mimic old look ==== */
 /* FIXME: delet this */
-section {
+main section {
     padding: 0.5rem;
     border-bottom: 1px solid black;
 }
 
-section:last-child {
+main section:last-child {
     border: 0;
 }

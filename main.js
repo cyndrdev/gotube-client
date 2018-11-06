@@ -31,10 +31,11 @@ $(function() {
             for (var i = 0; i < searchResults.length; i++) {
                 resultsParent
                     .append($("<li></li>")
-                    .append($("<button/>", 
+                    .append($("<a/>", 
                     {
                         text: searchResults[i].title,
-                        id: i
+                        id: i,
+                        href: ""
                     })));
             }
         })
@@ -47,7 +48,7 @@ $(function() {
     });
 
     // search result button handler 
-    resultsParent.on("click", "li button", function () {
+    resultsParent.on("click", "li a", function () {
         var i = parseInt($(this).attr("id"));
         var url = getApiAddress() + "/queue/add";
 
