@@ -35,7 +35,7 @@ $(function() {
                     {
                         text: searchResults[i].title,
                         id: i,
-                        href: ""
+                        href: "#"
                     })));
             }
         })

@@ -1,10 +1,39 @@
 @import url('https://fonts.googleapis.com/css?family=Quicksand:300,400,700');
 
 /* ==== font setup ==== */
+
 h1, h2, h3, h4, h5, h6,
 a, p, ul, ol, li, span,
 input, textarea, label {
     font-family: "Quicksand", "Open Sans", "Noto Sans", "Arial", sans-serif;
+}
+
+/* ==== rainbow header ==== */
+
+@keyframes rainbow {
+    0% { background-position: 0% 82% }
+    50% { background-position: 100% 19% }
+    100% { background-position: 0% 82% }
+}
+
+header h1 {
+    background: linear-gradient(
+        124deg, 
+        #ff2400, 
+        #e81d1d,
+        #e8b71d,
+        #e3e81d,
+        #1de840,
+        #1ddde8,
+        #2b1de8,
+        #dd00f3,
+        #dd00f3);
+        background-size: 1000% 1800%;
+    background-clip: text;
+    animation: rainbow 10s ease infinite;
+    -webkit-background-clip: text;
+    text-fill-color: transparent;
+    -webkit-text-fill-color: transparent;
 }
 
 /* ==== css reset ==== */
@@ -14,22 +43,23 @@ body {
     margin: 0;
 }
 
-/* player */
+/* ==== grid system ==== */
+
+main {
+    display: grid;
+}
+
+main section {
+    background-color: pink;
+    padding: 0.5rem;
+    margin: 0.5rem;
+}
+
+/* ==== player ==== */
 
 section.player {
     position: fixed;
     bottom: 0;
     right: 1.5rem;
     padding: 0;
-}
-
-/* ==== mimic old look ==== */
-/* FIXME: delet this */
-main section {
-    padding: 0.5rem;
-    border-bottom: 1px solid black;
-}
-
-main section:last-child {
-    border: 0;
 }
