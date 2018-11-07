@@ -59,7 +59,17 @@ main section {
 
 section.player {
     position: fixed;
+    width: 24rem;
     bottom: 0;
     right: 1.5rem;
     padding: 0;
+}
+
+section.player > * {
+    width: 100% !important;
+    display: block;
+}
+
+section.player .mejs__audio {
+    width: 100% !important;
 }

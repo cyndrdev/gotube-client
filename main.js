@@ -167,7 +167,12 @@ $(function() {
     }
 
     function updateArtwork(data) {
-        $("img.artwork").attr("src", "https://img.youtube.com/vi/" + data + "/0.jpg");
+        var arturl = "https://img.youtube.com/vi/" + data + "/hqdefault.jpg";
+        var suffix = "default.jpg";
+
+        var artwork = $("img.artwork");
+
+        artwork.attr("src", arturl);
     }
 
     function initPlayer() {
