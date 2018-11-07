@@ -1,11 +1,185 @@
-$(function() {
-    var searchResults = [];
-    var resultsParent = $("#searchResults");
-    var queueParent = $("#queueParent");
+var searchResults = [];
+var resultsParent = $("#searchResults");
+var queueParent = $("#queueParent");
 
-    var player = null;
-    var queue = [];
-    var playing = false;
+var player = null;
+var queue = [];
+var playing = false;
+
+var serverCookie = "gotube_ip";
+var portCookie = "gotube_port";
+
+/* ==== time prototypes ==== */
+Date.time = function() {
+    return + new Date();
+}
+
+/* ==== playback methods ==== */
+function playTop() {
+    if (!queue || !queue.length)
+        return;
+
+    if (playing)
+        return;
+
+    var apiAddr = getApiAddress();
+    var idUrl = apiAddr + "/queue/top";
+    
+    // first get the id of the song at the top of the queue
+    $.ajax({url:idUrl})
+    .done(function (data) {
+        console.log(data);
+
+        // then play the song with that id
+        player.setSrc(apiAddr + "/stream/" + data);
+        player.load();
+        player.play();
+
+        updateArtwork(data);
+
+        playing = true;
+    })
+    .fail(function () {
+        alert("unable to get queue top");
+    });
+}
+
+function updateArtwork(data) {
+    var arturl = "https://img.youtube.com/vi/" + data + "/hqdefault.jpg";
+    var suffix = "default.jpg";
+
+    var artwork = $("img.artwork");
+
+    artwork.attr("src", arturl);
+}
+
+function initPlayer() {
+    var playerParent = $("#playerParent");
+
+    // destroy any existing player
+    if (player) {
+        player.pause();
+        player.remove();
+    }
+    playerParent.html("");
+
+    playerParent
+        .append($("<audio></audio>",
+            {
+                preload: "none",
+                type: "audio/webm",
+                controls: true,
+                id: "player"
+            }));
+
+    var pElement = $("#player");
+
+    pElement.mediaelementplayer({
+        success: function (media, node, instance) {
+            console.log("player loaded");
+        }
+    });
+
+    pElement.on("ended", function() {
+        playing = false;
+        loadNext();
+    });
+
+    player = mejs.players["mep_0"];
+}
+
+function loadServerDetails() {
+    var address = Cookies.get(serverCookie);
+    var port = Cookies.get(portCookie);
+    if ( address != undefined && port != undefined ) {
+        $("#serverAddress").val(address);
+        $("#serverPort").val(port);
+    }
+    return address + ":" + port;
+}
+
+function saveServerDetails() {
+    var address = $("#serverAddress").val();
+    var port = $("#serverPort").val();
+    Cookies.set(serverCookie, address)
+    Cookies.set(portCookie, port);
+    return address + ":" + port;
+}
+
+function clearServerDetails() {
+    Cookies.remove(serverCookie);
+    Cookies.remove(portCookie);
+}
+
+function validateConnection() {
+    $.ajax({
+        url:getApiAddress() + "/ping"
+    })
+    .done(function(data){
+        var serverTime = data / 1000000;
+        var currentTime = Date.time();
+        console.log("connection established (" + Math.round(currentTime - serverTime) + "ms)");
+    })
+    .fail(function(){
+        console.log("no connection D:");
+    });
+}
+
+function getApiAddress() {
+    var address = $("#serverAddress").val();
+    var port = $("#serverPort").val();
+
+    return `http://${address}:${port}`;
+}
+
+function loadNext() {
+    var url = getApiAddress() + "/queue/next";
+
+    $.post({url:url})
+    .done(function() { 
+        updateQueue();
+    })
+    .fail(function() {
+        alert("unable to load next");
+    });
+}
+
+function updateQueue() {
+    var url = getApiAddress() + "/queue";
+
+    $.ajax({url: url})
+    .done(function (data) {
+        queue = JSON.parse(data);
+        
+        if (!queue || !queue.length) // queue is empty i guess 
+            return;
+
+        // clear whatever was already there
+        queueParent.html("");
+
+        for (var i = 0; i < queue.length; i++) {
+            console.log(queue[i].title);
+
+            queueParent
+                .append($("<li></li>",
+                {
+                    text: queue[i].title
+                }));
+        }
+
+        console.log("queue loaded of length: " + queue.length);
+        console.log(player);
+
+        playTop();
+    })
+    .fail(function () {
+        alert("error: unable to get queue");
+    });
+}
+
+$(function() {
+    resultsParent = $("#searchResults");
+    queueParent = $("#queueParent");
 
     $("#searchButton").click(function() {
         var query = $("#searchQuery").val();
@@ -85,131 +259,6 @@ $(function() {
         });
     });
     
-    function updateQueue() {
-        var url = getApiAddress() + "/queue";
-
-        $.ajax({url: url})
-        .done(function (data) {
-            queue = JSON.parse(data);
-            
-            if (!queue || !queue.length) // queue is empty i guess 
-                return;
-
-            // clear whatever was already there
-            queueParent.html("");
-
-            for (var i = 0; i < queue.length; i++) {
-                console.log(queue[i].title);
-
-                queueParent
-                    .append($("<li></li>",
-                    {
-                        text: queue[i].title
-                    }));
-            }
-
-            console.log("queue loaded of length: " + queue.length);
-            console.log(player);
-
-            playTop();
-        })
-        .fail(function () {
-            alert("error: unable to get queue");
-        });
-    }
-
-    function getApiAddress() {
-        var address = $("#serverAddress").val();
-        var port = $("#serverPort").val();
-
-        return `http://${address}:${port}`;
-    }
-
-    function loadNext() {
-        var url = getApiAddress() + "/queue/next";
-
-        $.post({url:url})
-        .done(function() { 
-            updateQueue();
-        })
-        .fail(function() {
-            alert("unable to load next");
-        });
-    }
-
-    function playTop() {
-        if (!queue || !queue.length)
-            return;
-
-        if (playing)
-            return;
-
-        var apiAddr = getApiAddress();
-        var idUrl = apiAddr + "/queue/top";
-        
-        // first get the id of the song at the top of the queue
-        $.ajax({url:idUrl})
-        .done(function (data) {
-            console.log(data);
-
-            // then play the song with that id
-            player.setSrc(apiAddr + "/stream/" + data);
-            player.load();
-            player.play();
-
-            updateArtwork(data);
-
-            playing = true;
-        })
-        .fail(function () {
-            alert("unable to get queue top");
-        });
-    }
-
-    function updateArtwork(data) {
-        var arturl = "https://img.youtube.com/vi/" + data + "/hqdefault.jpg";
-        var suffix = "default.jpg";
-
-        var artwork = $("img.artwork");
-
-        artwork.attr("src", arturl);
-    }
-
-    function initPlayer() {
-        var playerParent = $("#playerParent");
-
-        // destroy any existing player
-        if (player) {
-            player.pause();
-            player.remove();
-        }
-        playerParent.html("");
-
-        playerParent
-            .append($("<audio></audio>",
-                {
-                    preload: "none",
-                    type: "audio/webm",
-                    controls: true,
-                    id: "player"
-                }));
-
-        var pElement = $("#player");
-
-        pElement.mediaelementplayer({
-            success: function (media, node, instance) {
-                console.log("player loaded");
-            }
-        });
-
-        pElement.on("ended", function() {
-            playing = false;
-            loadNext();
-        });
-
-        player = mejs.players["mep_0"];
-    }
-
     autoplayNext = true;
     // get the queue from the server as soon as the page loads
     updateQueue();

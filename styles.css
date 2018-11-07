@@ -63,6 +63,7 @@ section.player {
     bottom: 0;
     right: 1.5rem;
     padding: 0;
+    box-shadow: 0 0 0.5rem rgba(0,0,0,0.5);
 }
 
 section.player > * {
@@ -72,4 +73,10 @@ section.player > * {
 
 section.player .mejs__audio {
     width: 100% !important;
+}
+
+/* ==== modal windows ==== */
+
+.modal {
+    display: none;
 }
