@@ -156,11 +156,18 @@ $(function() {
             player.setSrc(apiAddr + "/stream/" + data);
             player.load();
             player.play();
+
+            updateArtwork(data);
+
             playing = true;
         })
         .fail(function () {
             alert("unable to get queue top");
         });
+    }
+
+    function updateArtwork(data) {
+        $("img.artwork").attr("src", "https://img.youtube.com/vi/" + data + "/0.jpg");
     }
 
     function initPlayer() {

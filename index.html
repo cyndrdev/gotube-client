@@ -9,23 +9,23 @@
         <link rel="stylesheet" href="styles.css" />
     </head>
     <body>
+        <header>
+            <h1>gotube</h1>
+        </header>
+
+        <section class="config">
+            <h2>server config</h2>
+            <p>
+                <span>server ip</span>
+                <input type="text" id="serverAddress" value="localhost"/>
+            </p>
+            <p>
+                <span>server port</span>
+                <input type="text" id="serverPort" value="8080"/>
+            </p>
+        </section>
+
         <main>
-            <header>
-                <h1>gotube</h1>
-            </header>
-
-            <section class="config">
-                <h2>server config</h2>
-                <p>
-                    <span>server ip</span>
-                    <input type="text" id="serverAddress" value="localhost"/>
-                </p>
-                <p>
-                    <span>server port</span>
-                    <input type="text" id="serverPort" value="8080"/>
-                </p>
-            </section>
-
             <section class="search">
                 <h2>search</h2>
                 <p>
@@ -41,6 +41,11 @@
                 <ul id="queueParent"></ul>
                 <button type="button" id="clearQueue">clear</button> 
                 <!-- <audio controls id="player" preload="none" type="audio/webm"></audio> -->
+            </section>
+
+            <section class="artwork">
+                <h2>artwork</h2>
+                <img class="artwork" />
             </section>
         </main>
         
