@@ -203,7 +203,8 @@ $(function() {
 
         var url = getApiAddress() + "/search";
         var postData = JSON.stringify({
-            query: query
+            query: query,
+            maxResults: 10
         });
 
         $.post({
