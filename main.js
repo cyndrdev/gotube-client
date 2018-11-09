@@ -1,6 +1,6 @@
 var searchResults = [];
-var resultsParent = $("#searchResults");
-var queueParent = $("#queueParent");
+var resultsParent;
+var queueParent;
 
 var player = null;
 var queue = [];
@@ -45,8 +45,7 @@ function playTop() {
 }
 
 function updateArtwork(data) {
-    var arturl = "https://img.youtube.com/vi/" + data + "/hqdefault.jpg";
-    var suffix = "default.jpg";
+    var arturl = "https://img.youtube.com/vi/" + data + "/maxresdefault.jpg";
 
     var artwork = $("img.artwork");
 
@@ -111,17 +110,33 @@ function clearServerDetails() {
     Cookies.remove(portCookie);
 }
 
-function validateConnection() {
+function showConnectionSettings() {
+    $('.modal-hider').fadeIn();
+    $('.config').fadeIn();
+}
+
+function hideConnectionSettings() {
+    $('.modal-hider').fadeOut();
+    $('.config').fadeOut();
+}
+
+function init() {
     $.ajax({
         url:getApiAddress() + "/ping"
     })
     .done(function(data){
+        saveServerDetails();
+
         var serverTime = data / 1000000;
         var currentTime = Date.time();
         console.log("connection established (" + Math.round(currentTime - serverTime) + "ms)");
+
+        updateQueue();
+        initPlayer();
     })
     .fail(function(){
         console.log("no connection D:");
+        showConnectionSettings();
     });
 }
 
@@ -238,6 +253,11 @@ $(function() {
         });
     });
 
+    $("#configButton").click(function() {
+        saveServerDetails();
+        location.reload();
+    });
+
     $("#clearQueue").click(function () {
         var url = getApiAddress() + "/queue/clear";
         var postData = { index: -1 };
@@ -260,7 +280,6 @@ $(function() {
     });
     
     autoplayNext = true;
-    // get the queue from the server as soon as the page loads
-    updateQueue();
-    initPlayer();
+    loadServerDetails();
+    init();
 });

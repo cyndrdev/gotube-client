@@ -77,6 +77,30 @@ section.player .mejs__audio {
 
 /* ==== modal windows ==== */
 
-.modal {
+.modal, .modal-hider {
     display: none;
+}
+
+.modal {
+    width: 30rem;
+    position: absolute;
+    z-index: 10;
+
+    top: 30%;
+    left: calc(50% - 15rem);
+
+    padding: 1rem;
+    border-radius: 1rem;
+    background-color: white;
+    box-shadow: 0 0 0.5rem rgba(0,0,0,0.5);
+}
+
+.modal-hider {
+    z-index: 1;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(20, 0, 0, 0.4);
 }

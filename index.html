@@ -15,6 +15,9 @@
             <h1>gotube</h1>
         </header>
 
+        <div class="modal-hider">
+        </div>
+
         <section class="config modal">
             <h2>server config</h2>
             <p>
@@ -25,6 +28,7 @@
                 <span>server port</span>
                 <input type="text" id="serverPort" value="8080"/>
             </p>
+            <button id="configButton">connect</button>
         </section>
 
         <main>
@@ -33,7 +37,7 @@
                 <p>
                     <span>query</span>
                     <input type="text" id="searchQuery"/>
-                    <button type="button" id="searchButton">search</button>
+                    <button id="searchButton">search</button>
                     <ul id="searchResults"></ul>
                 </p>
             </section>
@@ -41,7 +45,7 @@
             <section class="queue">
                 <h2>queue</h2>
                 <ul id="queueParent"></ul>
-                <button type="button" id="clearQueue">clear</button> 
+                <button id="clearQueue">clear</button> 
                 <!-- <audio controls id="player" preload="none" type="audio/webm"></audio> -->
             </section>
         </main>
