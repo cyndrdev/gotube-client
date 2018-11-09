@@ -258,6 +258,8 @@ $(function() {
         location.reload();
     });
 
+    $("#configSettings").click(showConnectionSettings);
+
     $("#clearQueue").click(function () {
         var url = getApiAddress() + "/queue/clear";
         var postData = { index: -1 };

@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css?family=Quicksand:300,400,700');
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
 
 /* ==== font setup ==== */
 
@@ -6,6 +7,11 @@ h1, h2, h3, h4, h5, h6,
 a, p, ul, ol, li, span,
 input, textarea, label {
     font-family: "Quicksand", "Open Sans", "Noto Sans", "Arial", sans-serif;
+}
+
+.material-icons {
+    cursor: pointer;
+    user-select: none;
 }
 
 /* ==== rainbow header ==== */
@@ -76,6 +82,16 @@ section.player .mejs__audio {
 }
 
 /* ==== modal windows ==== */
+
+#configSettings {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+}
+
+#configSettings i {
+    font-size: 2rem;
+}
 
 .modal, .modal-hider {
     display: none;
