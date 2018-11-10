@@ -36,9 +36,14 @@ li:first-child {
 
 header > * {
     display: inline;
+    color: red;
 }
 
-header h1 {
+header h2 {
+    font-size: 1rem;
+}
+
+header.connected h1 {
     background: linear-gradient(
         124deg, 
         #ff2400, 
@@ -58,12 +63,8 @@ header h1 {
     -webkit-text-fill-color: transparent;
 }
 
-header h2 {
-    font-size: 1rem;
-}
-
-header h2.disconnected {
-    color: red;
+header.connected h2 {
+    color: grey;
 }
 
 /* ==== css reset ==== */

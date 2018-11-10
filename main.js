@@ -127,14 +127,16 @@ function hideConnectionSettings() {
 }
 
 function updateVersion() {
-    var subheading = $("header h2");
+    var subheader = $("header h2");
+    var header = $("header");
+
     if (version == null) {
-        subheading.text("[disconnected]");
-        subheading.addClass("disconnected");
+        subheader.text("[disconnected]");
+        header.removeClass("connected");
     }
     else {
-        subheading.text("v" + version);
-        subheading.removeClass("disconnected");
+        subheader.text("v" + version);
+        header.addClass("connected");
     }
 }
 
