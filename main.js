@@ -10,6 +10,10 @@ var playing = false;
 var serverCookie = "gotube_ip";
 var portCookie = "gotube_port";
 
+var version;
+
+var modalFadeTime = 175;
+
 /* ==== time prototypes ==== */
 Date.time = function() {
     return + new Date();
@@ -113,26 +117,46 @@ function clearServerDetails() {
 }
 
 function showConnectionSettings() {
-    $('.modal-hider').fadeIn();
-    $('.config').fadeIn();
+    $('.modal-hider').fadeIn(modalFadeTime);
+    $('.config').fadeIn(modalFadeTime);
 }
 
 function hideConnectionSettings() {
-    $('.modal-hider').fadeOut(400, loadServerDetails);
-    $('.config').fadeOut();
+    $('.modal-hider').fadeOut(modalFadeTime, loadServerDetails);
+    $('.config').fadeOut(modalFadeTime);
+}
+
+function updateVersion() {
+    var subheading = $("header h2");
+    if (version == null) {
+        subheading.text("[disconnected]");
+        subheading.addClass("disconnected");
+    }
+    else {
+        subheading.text("v" + version);
+        subheading.removeClass("disconnected");
+    }
 }
 
 function init() {
     $.ajax({
-        url:getApiAddress() + "/ping"
+        url:getApiAddress() + "/version"
     })
     .done(function(data){
+        var re = /^(?:gotube\/)((?:[0-9]+\.){2}[0-9]+)\s*$/;
+
+        // check the server is a gotube server.
+        if (!re.test(data)){
+            showConnectionSettings();
+            return;
+        }
+
+        version = data.match(re)[1];
+
+        console.log(`connected to gotube v${version} on ${getApiAddress()}.`);
+        updateVersion();
+
         saveServerDetails();
-
-        var serverTime = data / 1000000;
-        var currentTime = Date.time();
-        console.log("connection established (" + Math.round(currentTime - serverTime) + "ms)");
-
         updateQueue();
         initPlayer();
     })

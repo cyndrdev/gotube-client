@@ -34,6 +34,10 @@ li:first-child {
     100% { background-position: 0% 82% }
 }
 
+header > * {
+    display: inline;
+}
+
 header h1 {
     background: linear-gradient(
         124deg, 
@@ -52,6 +56,14 @@ header h1 {
     -webkit-background-clip: text;
     text-fill-color: transparent;
     -webkit-text-fill-color: transparent;
+}
+
+header h2 {
+    font-size: 1rem;
+}
+
+header h2.disconnected {
+    color: red;
 }
 
 /* ==== css reset ==== */
