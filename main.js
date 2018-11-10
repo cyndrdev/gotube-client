@@ -1,4 +1,5 @@
 var searchResults = [];
+
 var resultsParent;
 var queueParent;
 
@@ -94,7 +95,8 @@ function loadServerDetails() {
         $("#serverAddress").val(address);
         $("#serverPort").val(port);
     }
-    return address + ":" + port;
+
+    return `http://${address}:${port}`;
 }
 
 function saveServerDetails() {
@@ -141,8 +143,8 @@ function init() {
 }
 
 function getApiAddress() {
-    var address = $("#serverAddress").val();
-    var port = $("#serverPort").val();
+    var address = Cookies.get(serverCookie);
+    var port = Cookies.get(portCookie);
 
     return `http://${address}:${port}`;
 }
@@ -241,6 +243,14 @@ $(function() {
     resultsParent.on("click", "li a", function () {
         var i = parseInt($(this).attr("id"));
         var url = getApiAddress() + "/queue/add";
+
+        var song_title = $(this).text();
+
+        queueParent
+            .append($("<li></li>",
+                    {
+                        text: song_title
+                    }));
 
         $.post({
             url: url,
