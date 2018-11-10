@@ -118,7 +118,7 @@ function showConnectionSettings() {
 }
 
 function hideConnectionSettings() {
-    $('.modal-hider').fadeOut();
+    $('.modal-hider').fadeOut(400, loadServerDetails);
     $('.config').fadeOut();
 }
 
@@ -269,6 +269,7 @@ $(function() {
         location.reload();
     });
 
+    $("#configClose").click(hideConnectionSettings);
     $("#configSettings").click(showConnectionSettings);
 
     $("#clearQueue").click(function () {

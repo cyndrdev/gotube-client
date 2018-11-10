@@ -9,6 +9,18 @@ input, textarea, label {
     font-family: "Quicksand", "Open Sans", "Noto Sans", "Arial", sans-serif;
 }
 
+h1:first-child,
+h2:first-child,
+h3:first-child,
+h4:first-child,
+h5:first-child,
+h6:first-child,
+a:first-child,
+p:first-child,
+li:first-child {
+    margin-top: 0;
+}
+
 .material-icons {
     cursor: pointer;
     user-select: none;
@@ -109,6 +121,12 @@ section.player .mejs__audio {
     border-radius: 1rem;
     background-color: white;
     box-shadow: 0 0 0.5rem rgba(0,0,0,0.5);
+}
+
+#configClose {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
 }
 
 .modal-hider {
