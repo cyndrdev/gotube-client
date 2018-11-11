@@ -54,7 +54,7 @@ function setVolume(level) {
         audio.trigger('play');
     }
 
-    var volumeIcon = $("#volumeLevel i");
+    var volumeIcon = $("#volumeLevel");
     if (level == 0) {
         volumeIcon.text("volume_off");
     }
