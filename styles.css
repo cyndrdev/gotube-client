@@ -35,7 +35,7 @@ li:first-child {
 }
 
 header {
-    padding: 1rem;
+    padding: 1rem 2.5rem;
     margin-bottom: 1.5rem;
     height: 3rem;
     display: flex;
@@ -114,7 +114,7 @@ nav.menus {
     height: 100%;
     display: flex;
     align-items: center;
-    margin-right: 2rem;
+    margin-right: 0.5rem;
 }
 
 nav.menus i {
