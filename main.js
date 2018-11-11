@@ -234,10 +234,11 @@ function updateQueue() {
             console.log(queue[i].title);
 
             queueParent
-                .append($("<li></li>",
+                .append($("<li></li>")
+                .append($("<a/>",
                 {
                     text: queue[i].title
-                }));
+                })));
         }
 
         console.log("queue loaded of length: " + queue.length);
@@ -269,6 +270,7 @@ function doSearch() {
         resultsParent.html("");
 
         searchResults = JSON.parse(data);
+        console.log(data);
 
         // create a list element with a button for each result
         for (var i = 0; i < searchResults.length; i++) {
@@ -313,10 +315,11 @@ $(function() {
         var song_title = $(this).text();
 
         queueParent
-            .append($("<li></li>",
+            .append($("<li></li>")
+                .append($("<a/>", 
                     {
                         text: song_title
-                    }));
+                    })));
 
         $.post({
             url: url,
