@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css?family=Quicksand:300,400,700');
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
 
-/* ==== font setup ==== */
+/* === font setup === */
 
 h1, h2, h3, h4, h5, h6,
 a, p, ul, ol, li, span,
@@ -26,7 +26,7 @@ li:first-child {
     user-select: none;
 }
 
-/* ==== rainbow header ==== */
+/* === rainbow header === */
 
 @keyframes rainbow {
     0% { background-position: 0% 82% }
@@ -67,14 +67,14 @@ header.connected h2 {
     color: grey;
 }
 
-/* ==== css reset ==== */
+/* === css reset === */
 
 body {
     padding: 0;
     margin: 0;
 }
 
-/* ==== grid system ==== */
+/* === grid system === */
 
 main {
     display: grid;
@@ -86,36 +86,130 @@ main section {
     margin: 0.5rem;
 }
 
-/* ==== player ==== */
+/* === volume controls === */
+.slider-holder {
+    display: none;
+    overflow: hidden;
 
-section.player {
-    position: fixed;
-    width: 24rem;
-    bottom: 0;
-    right: 1.5rem;
-    padding: 0;
+    height: 14.5rem;
+    width: 2rem;
+
+    position: absolute;
+    top: 0.7rem;
+    right: 0.7rem;
+
+    padding: 0.3rem;
+    border-radius: 0.3rem;
+    background-color: white;
     box-shadow: 0 0 0.5rem rgba(0,0,0,0.5);
 }
 
-section.player > * {
-    width: 100% !important;
-    display: block;
+.slider-holder input {
+    position: relative;
+    top: 4.35rem;
+    left: -4.65rem;
+    transform: rotate(270deg);
 }
 
-section.player .mejs__audio {
-    width: 100% !important;
+.slider-holder input::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
 }
 
-/* ==== modal windows ==== */
+.slider-holder input::-webkit-slider-thumb,
+.slider-holder input::-moz-range-thumb {
+    border: none;
+    height: 1.2rem;
+    width: 1.2rem;
+    background-color: black;
+    cursor: pointer;
+}
 
-#configSettings {
+.slider-holder i {
+    font-size: 2rem;
+}
+
+.slider-holder i:last-child {
+    position: relative;
+    top: 8.8rem;
+}
+
+/* === player === */
+
+section.player {
+    position: fixed;
+
+    display: flex;
+    flex-direction: row;
+
+    justify-content: center;
+    align-items: center;
+
+    width: 100%;
+    bottom: 0;
+    right: 0;
+    padding: 0;
+
+    background-color: black;
+    box-shadow: 0 0 0.5rem rgba(0,0,0,0.5);
+}
+
+section.thumbnail {
+    max-width: 100%;
+    width: calc(30% + 10rem);
+    position: fixed;
+    right: 1.5rem;
+    bottom: 3rem;
+}
+
+section.thumbnail img {
+    width: 100%;
+}
+
+.main-controls {
+    width: 9rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.main-controls > button {
+    cursor: pointer;
+}
+
+/* === player controls === */
+
+section.player button,
+section.player button:focus,
+section.player button:active {
+    display: inline-block;
+    height: 100%;
+    border: none;
+    padding: 0;
+    margin: 0;
+    background: none;
+    color: white;
+    font-size: 2rem;
+    font-family: 'Material Icons';
+}
+
+section.player button.big {
+    font-size: 3rem;
+}
+
+/* === modal windows === */
+
+nav.menus {
     position: absolute;
     top: 1rem;
     right: 1rem;
+
+    display: flex;
 }
 
-#configSettings i {
+nav.menus i {
     font-size: 2rem;
+    margin-left: 0.5rem;
 }
 
 .modal, .modal-hider {

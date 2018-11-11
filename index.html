@@ -5,8 +5,6 @@
         <title>gotube</title>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script src="main.js" href="main.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/mediaelement/4.2.9/mediaelement-and-player.min.js"></script>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mediaelement/4.2.9/mediaelementplayer.min.css" />
         <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
         <link rel="stylesheet" href="styles.css" />
     </head>
@@ -15,6 +13,12 @@
             <h1>gotube</h1>
             <h2 class="version">[disconnected]</h2>
         </header>
+
+        <div class="slider-holder">
+            <i class="material-icons">volume_mute</i>
+            <input type="range" min="0" max="100" value="0"/>
+            <i class="material-icons">volume_up</i>
+        </div>
 
         <div class="modal-hider">
         </div>
@@ -34,7 +38,10 @@
         </section>
 
         <main>
-            <a id="configSettings"><i class="material-icons">wifi_tethering</i></a>
+            <nav class="menus">
+                <a id="configSettings"><i class="material-icons">wifi_tethering</i></a>
+                <a id="volumeLevel"><i class="material-icons">volume_up</i></a>
+            </nav>
             <section class="search">
                 <h2>search</h2>
                 <p>
@@ -49,13 +56,26 @@
                 <h2>queue</h2>
                 <ul id="queueParent"></ul>
                 <button id="clearQueue">clear</button> 
-                <!-- <audio controls id="player" preload="none" type="audio/webm"></audio> -->
             </section>
         </main>
+
+        <section class="thumbnail">
+            <img class="artwork" />
+        </section>
         
         <section class="player">
-            <img class="artwork" />
-            <div id="playerParent"></div>
+            <audio preload="none">
+                <source src="" type="audio/webm">
+            </audio>
+
+            <div class="main-controls">
+                <button class="restart">replay</button>
+                <button class="play-pause big">play_circle_filled</button>
+                <button class="skip">skip_next</button>
+            </div>
+
+            <div class="timecode"></div>
+            <div class="length"></div>
         </section>
     </body>
 </html>

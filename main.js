@@ -3,7 +3,13 @@ var searchResults = [];
 var resultsParent;
 var queueParent;
 
-var player = null;
+var audio = null;
+var source = null;
+
+var volumeTimer = null;
+var volumeFadeDelay = 2250;
+var volumeFadeTime = 125;
+
 var queue = [];
 var playing = false;
 
@@ -14,12 +20,61 @@ var version;
 
 var modalFadeTime = 175;
 
-/* ==== time prototypes ==== */
+/* === prototypes & extention methods === */
 Date.time = function() {
     return + new Date();
 }
 
-/* ==== playback methods ==== */
+Number.prototype.clamp = function(min, max) {
+  return Math.min(Math.max(this, min), max);
+};
+
+/* === playback methods === */
+function playUrl(url) {
+    audio.trigger('pause');
+    source.attr("src", url);
+    audio.trigger('load');
+    audio.prop('currentTime', 0);
+    audio.trigger('play');
+}
+
+function restart() {
+    audio.trigger('pause');
+    audio.prop('currentTime', 0);
+    audio.trigger('play');
+}
+
+function setVolume(level) {
+    resetVolumeTimer();
+    audio.prop('volume', level.clamp(0, 1));
+    
+    // fix bugs related to anti-autoplay features 
+    if (playing) {
+        audio.trigger('play');
+    }
+
+    var volumeIcon = $("#volumeLevel i");
+    if (level == 0) {
+        volumeIcon.text("volume_off");
+    }
+    else if (level < 0.2) {
+        volumeIcon.text("volume_mute");
+    }
+    else if (level < 0.6) {
+        volumeIcon.text("volume_down");
+    }
+    else {
+        volumeIcon.text("volume_up");
+    }
+}
+
+function resetVolumeTimer() {
+    if (volumeTimer != null) {
+        clearTimeout(volumeTimer);
+    }
+    volumeTimer = setTimeout(hideVolumeSlider, volumeFadeDelay);
+}
+
 function playTop() {
     if (!queue || !queue.length)
         return;
@@ -36,9 +91,7 @@ function playTop() {
         console.log(data);
 
         // then play the song with that id
-        player.setSrc(apiAddr + "/stream/" + data);
-        player.load();
-        player.play();
+        playUrl(apiAddr + "/stream/" + data);
 
         updateArtwork(data);
 
@@ -55,41 +108,6 @@ function updateArtwork(data) {
     var artwork = $("img.artwork");
 
     artwork.attr("src", arturl);
-}
-
-function initPlayer() {
-    var playerParent = $("#playerParent");
-
-    // destroy any existing player
-    if (player) {
-        player.pause();
-        player.remove();
-    }
-    playerParent.html("");
-
-    playerParent
-        .append($("<audio></audio>",
-            {
-                preload: "none",
-                type: "audio/webm",
-                controls: true,
-                id: "player"
-            }));
-
-    var pElement = $("#player");
-
-    pElement.mediaelementplayer({
-        success: function (media, node, instance) {
-            console.log("player loaded");
-        }
-    });
-
-    pElement.on("ended", function() {
-        playing = false;
-        loadNext();
-    });
-
-    player = mejs.players["mep_0"];
 }
 
 function loadServerDetails() {
@@ -126,6 +144,17 @@ function hideConnectionSettings() {
     $('.config').fadeOut(modalFadeTime);
 }
 
+function showVolumeSlider() {
+    resetVolumeTimer();
+    $('#volumeLevel').fadeTo(volumeFadeTime, 0);
+    $('.slider-holder').fadeIn();
+}
+
+function hideVolumeSlider() {
+    $('#volumeLevel').fadeTo(volumeFadeTime, 1);
+    $('.slider-holder').fadeOut();
+}
+
 function updateVersion() {
     var subheader = $("header h2");
     var header = $("header");
@@ -160,7 +189,6 @@ function init() {
 
         saveServerDetails();
         updateQueue();
-        initPlayer();
     })
     .fail(function(){
         console.log("no connection D:");
@@ -177,6 +205,7 @@ function getApiAddress() {
 
 function loadNext() {
     var url = getApiAddress() + "/queue/next";
+    audio.trigger('pause');
 
     $.post({url:url})
     .done(function() { 
@@ -211,7 +240,6 @@ function updateQueue() {
         }
 
         console.log("queue loaded of length: " + queue.length);
-        console.log(player);
 
         playTop();
     })
@@ -221,6 +249,9 @@ function updateQueue() {
 }
 
 $(function() {
+    audio = $("audio");
+    source = $("audio source");
+
     resultsParent = $("#searchResults");
     queueParent = $("#queueParent");
 
@@ -298,6 +329,8 @@ $(function() {
     $("#configClose").click(hideConnectionSettings);
     $("#configSettings").click(showConnectionSettings);
 
+    $("#volumeLevel").click(showVolumeSlider);
+
     $("#clearQueue").click(function () {
         var url = getApiAddress() + "/queue/clear";
         var postData = { index: -1 };
@@ -318,8 +351,35 @@ $(function() {
             alert(xhr.statusText);
         });
     });
+
+    $(".play-pause").click(function() {
+        if (playing) {
+            audio.trigger('pause');
+        } else {
+            audio.trigger('play');
+        }
+    });
+
+    $(".restart").click(restart);
+
+    $(".skip").click(loadNext);
+
+    audio.bind("pause", function() {
+        playing = false;
+        $(".play-pause").text("play_circle_filled");
+    });
     
-    autoplayNext = true;
+    audio.bind("play", function() {
+        playing = true;
+        $(".play-pause").text("pause_circle_filled");
+    });
+
+    audio.bind("ended", loadNext);
+
+    $('.slider-holder input').bind("input", function() {
+        setVolume(1 - (this.value / 100));
+    });
+
     loadServerDetails();
     init();
 });
