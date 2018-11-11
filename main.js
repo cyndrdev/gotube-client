@@ -15,6 +15,7 @@ var playing = false;
 
 var serverCookie = "gotube_ip";
 var portCookie = "gotube_port";
+var playerCookie = "gotube_player";
 
 var version;
 
@@ -248,6 +249,47 @@ function updateQueue() {
     });
 }
 
+function doSearch() {
+    var query = $("#searchQuery").val();
+
+    console.log("search: " + query); 
+
+    var url = getApiAddress() + "/search";
+    var postData = JSON.stringify({
+        query: query,
+        maxResults: 10
+    });
+
+    $.post({
+        url: url,
+        data: postData
+    })
+    .done(function (data) {
+        // clear previous results
+        resultsParent.html("");
+
+        searchResults = JSON.parse(data);
+
+        // create a list element with a button for each result
+        for (var i = 0; i < searchResults.length; i++) {
+            resultsParent
+                .append($("<li></li>")
+                .append($("<a/>", 
+                {
+                    text: searchResults[i].title,
+                    id: i,
+                    href: "#"
+                })));
+        }
+    })
+    .fail(function () {
+        alert("search failed");
+    })
+    .always(function () {
+        console.log("search complete");
+    });
+}
+
 $(function() {
     audio = $("audio");
     source = $("audio source");
@@ -255,46 +297,7 @@ $(function() {
     resultsParent = $("#searchResults");
     queueParent = $("#queueParent");
 
-    $("#searchButton").click(function() {
-        var query = $("#searchQuery").val();
-
-        console.log("search: " + query); 
-
-        var url = getApiAddress() + "/search";
-        var postData = JSON.stringify({
-            query: query,
-            maxResults: 10
-        });
-
-        $.post({
-            url: url,
-            data: postData
-        })
-        .done(function (data) {
-            // clear previous results
-            resultsParent.html("");
-
-            searchResults = JSON.parse(data);
-
-            // create a list element with a button for each result
-            for (var i = 0; i < searchResults.length; i++) {
-                resultsParent
-                    .append($("<li></li>")
-                    .append($("<a/>", 
-                    {
-                        text: searchResults[i].title,
-                        id: i,
-                        href: "#"
-                    })));
-            }
-        })
-        .fail(function () {
-            alert("search failed");
-        })
-        .always(function () {
-            console.log("search complete");
-        });
-    });
+    $("#searchButton").click(doSearch);
 
     // search result button handler 
     resultsParent.on("click", "li a", function () {

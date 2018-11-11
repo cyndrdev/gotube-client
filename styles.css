@@ -26,21 +26,64 @@ li:first-child {
     user-select: none;
 }
 
-/* === rainbow header === */
+/* === header === */
 
 @keyframes rainbow {
-    0% { background-position: 0% 82% }
-    50% { background-position: 100% 19% }
-    100% { background-position: 0% 82% }
+    0%      { background-position: 0%   82% }
+    50%     { background-position: 100% 19% }
+    100%    { background-position: 0%   82% }
 }
 
-header > * {
-    display: inline;
-    color: red;
+header {
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    height: 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 0 0.5rem rgba(0,0,0,0.5);
+}
+
+header .gotube > * {
+    display:    inline;
+    color:      red;
 }
 
 header h2 {
-    font-size: 1rem;
+    font-size:  1rem;
+}
+
+header .search {
+    position: relative;
+    width: 45%;
+    color: grey;
+}
+
+header .search input {
+    color: grey;
+    font-size: 1.15rem;
+    width: calc(100% - 4.6rem);
+    height: 2rem;
+
+    padding: 0.5rem 3.6rem 0.5rem 1rem;
+    background-color: #f2f2f2;
+
+    border: 0;
+    border-radius: 0.35rem;
+}
+
+header .search button {
+    cursor: pointer;
+    content: 'search';
+    position: absolute;
+    border: 0;
+    padding: 0.5rem;
+    background: none;
+    top: -0.15rem;
+    right: 0.5rem;
+    z-index: 1000;
+    font-size: 2rem;
+    font-family: 'Material Icons';
 }
 
 header.connected h1 {
@@ -65,6 +108,18 @@ header.connected h1 {
 
 header.connected h2 {
     color: grey;
+}
+
+nav.menus {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    margin-right: 2rem;
+}
+
+nav.menus i {
+    font-size: 2rem;
+    margin-left: 1rem;
 }
 
 /* === css reset === */
@@ -95,11 +150,11 @@ main section {
     width: 2rem;
 
     position: absolute;
-    top: 0.7rem;
-    right: 0.7rem;
+    top: 0.75rem;
+    right: 2.3rem;
 
-    padding: 0.3rem;
-    border-radius: 0.3rem;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
     background-color: white;
     box-shadow: 0 0 0.5rem rgba(0,0,0,0.5);
 }
@@ -199,18 +254,6 @@ section.player button.big {
 
 /* === modal windows === */
 
-nav.menus {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-
-    display: flex;
-}
-
-nav.menus i {
-    font-size: 2rem;
-    margin-left: 0.5rem;
-}
 
 .modal, .modal-hider {
     display: none;

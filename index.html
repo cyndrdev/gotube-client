@@ -10,8 +10,18 @@
     </head>
     <body>
         <header>
-            <h1>gotube</h1>
-            <h2 class="version">[disconnected]</h2>
+            <div class="gotube">
+                <h1>gotube</h1>
+                <h2 class="version">[disconnected]</h2>
+            </div>
+            <div class="search">
+                <input id="searchQuery" type="text" />
+                <button id="searchButton">search</button>
+            </div>
+            <nav class="menus">
+                <i id="configSettings" class="material-icons">wifi_tethering</i>
+                <i id="volumeLevel" class="material-icons">volume_up</i>
+            </nav>
         </header>
 
         <div class="slider-holder">
@@ -38,16 +48,9 @@
         </section>
 
         <main>
-            <nav class="menus">
-                <a id="configSettings"><i class="material-icons">wifi_tethering</i></a>
-                <a id="volumeLevel"><i class="material-icons">volume_up</i></a>
-            </nav>
             <section class="search">
                 <h2>search</h2>
                 <p>
-                    <span>query</span>
-                    <input type="text" id="searchQuery"/>
-                    <button id="searchButton">search</button>
                     <ul id="searchResults"></ul>
                 </p>
             </section>
