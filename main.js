@@ -299,6 +299,12 @@ $(function() {
 
     $("#searchButton").click(doSearch);
 
+    $("#searchQuery").on('keyup', function (e) {
+        if (e.keyCode == 13) {
+            doSearch();
+        }
+    });
+
     // search result button handler 
     resultsParent.on("click", "li a", function () {
         var i = parseInt($(this).attr("id"));
