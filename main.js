@@ -15,6 +15,7 @@ var playing = false;
 
 var serverCookie = "gotube_ip";
 var portCookie = "gotube_port";
+var volumeCookie = "gotube_volume";
 var playerCookie = "gotube_player";
 
 var version;
@@ -45,9 +46,21 @@ function restart() {
     audio.trigger('play');
 }
 
+function loadVolume() {
+    var level = Cookies.get(volumeCookie);
+    if (level !== undefined) {
+        setVolume(level);
+        var range = Math.round((1 - level) * 100);
+        $(".slider-holder input").prop("value", range);
+    }
+}
+
 function setVolume(level) {
     resetVolumeTimer();
-    audio.prop('volume', level.clamp(0, 1));
+
+    level = Number(level).clamp(0, 1);
+    audio.prop('volume', level);
+    Cookies.set(volumeCookie, level);
     
     // fix bugs related to anti-autoplay features 
     if (playing) {
@@ -393,5 +406,6 @@ $(function() {
     });
 
     loadServerDetails();
+    loadVolume();
     init();
 });
