@@ -150,6 +150,10 @@ function clearServerDetails() {
     Cookies.remove(portCookie);
 }
 
+function hideModals() {
+    hideConnectionSettings();
+}
+
 function showConnectionSettings() {
     $('.modal-hider').fadeIn(modalFadeTime);
     $('.config').fadeIn(modalFadeTime);
@@ -358,6 +362,9 @@ $(function() {
         var id = parseInt($(this).attr("id"));
         addToQueue(id);
     });
+
+    // all modals
+    $(".modal-hider").click(hideModals)
 
     // server config modal
     $("#configClose").click(hideConnectionSettings);
