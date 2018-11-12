@@ -10,7 +10,6 @@
     --accent-2: #7ecdab;
 }
 
-
 /* === font setup === */
 
 h1, h2, h3, h4, h5, h6,
@@ -18,17 +17,6 @@ a, p, ul, ol, li, span,
 input, textarea, label {
     font-family: "Quicksand", "Open Sans", "Noto Sans", "Arial", sans-serif;
     color: var(--text-color);
-}
-
-h1:first-child,
-h2:first-child,
-h3:first-child,
-h4:first-child,
-h5:first-child,
-h6:first-child,
-a:first-child,
-p:first-child,
-li:first-child {
     margin-top: 0;
 }
 
@@ -88,6 +76,22 @@ ul li:hover a {
 }
 
 /* === search entries === */
+section.search h3,
+section.search h2 {
+    display: inline-block;
+}
+
+section.search h3 {
+    color: var(--text-color-lighter);
+}
+
+section.search.empty h3 {
+    display: none;
+}
+
+section.search h3:before { content: 'for "' }
+section.search h3:after  { content: '"' }
+
 section.search ul li a:before {
     content: 'queue_music';
 }
@@ -127,11 +131,11 @@ header h2 {
 header .search {
     position: relative;
     width: 45%;
-    color: grey;
+    color: var(--text-color-lighter);
 }
 
 header .search input {
-    color: grey;
+    color: var(--text-color-lighter);
     font-size: 1.15rem;
     width: calc(100% - 4.6rem);
     height: 2rem;
@@ -178,7 +182,7 @@ header.connected h1 {
 }
 
 header.connected h2 {
-    color: grey;
+    color: var(--text-color-lighter);
 }
 
 nav.menus {

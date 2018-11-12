@@ -282,6 +282,10 @@ function doSearch() {
         // clear previous results
         resultsParent.html("");
 
+        // show the search term
+        $(".search").removeClass("empty");
+        $(".search h3").text(query);
+
         searchResults = JSON.parse(data);
         console.log(data);
 
