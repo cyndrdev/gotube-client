@@ -35,15 +35,16 @@
 
         <section class="config modal">
             <h2>server config</h2>
-            <p>
-                <span>server ip</span>
-                <input type="text" id="serverAddress" value="localhost"/>
-            </p>
-            <p>
-                <span>server port</span>
-                <input type="text" id="serverPort" value="8080"/>
-            </p>
-            <button class="icon" id="configButton">connect</button>
+            <div class="labels">
+                <p>Host</p>
+                <p>Port</p>
+            </div>
+            <div class="server-data">
+                <input type="text" placeholder="ip" id="serverAddress" value="localhost"/>
+                <p>:</p>
+                <input type="text" placeholder="port" id="serverPort" value="8080"/>
+            </div>
+            <button class="icon" id="configButton">check</button>
             <a id="configClose"><i class="material-icons">close</i></a>
         </section>
 

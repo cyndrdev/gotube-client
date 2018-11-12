@@ -388,3 +388,63 @@ section.player button {
     height: 100vh;
     background-color: rgba(20, 0, 0, 0.4);
 }
+
+/* === server configuration settings === */
+
+.config {
+    padding-bottom: 3.5rem;
+}
+
+.labels {
+    margin-bottom: 0.2rem;
+}
+
+.labels p {
+    display: inline-block;
+    margin: 0;
+}
+
+.labels p:first-child {
+    padding-left: 0.85rem;
+    width: calc(100% - 5.5rem);
+}
+
+.config .server-data {
+    height: 1.3rem;
+    padding: 0.85rem;
+    background-color: var(--almost-white);
+    border-radius: 0.3rem;
+}
+
+.config .server-data > * {
+    display: inline-block;
+    height: 1.3rem;
+    font-size: 1.3rem;
+    line-height: 1.3rem;
+}
+
+.config .server-data input {
+    border: none;
+    background: none;
+    padding: 0;
+}
+
+.config .server-data p {
+    width: 0.4rem;
+    text-align: center;
+}
+
+.config .server-data #serverAddress {
+    width: calc(100% - 4.5rem);
+    /* 3.5 + 1.7 */
+}
+
+.config .server-data #serverPort {
+    width: 3.1rem;
+}
+
+.config #configButton {
+    position: absolute;
+    bottom: 0.7rem;
+    right: 1.2rem;
+}
