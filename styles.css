@@ -25,6 +25,20 @@ input, textarea, label {
     user-select: none;
 }
 
+button.icon {
+    cursor: pointer;
+    font-size: 2rem;
+    font-family: "Material Icons";
+    border: none;
+    background: none;
+    padding: 0;
+    margin: 0;
+}
+
+button.icon.big {
+    font-size: 3rem;
+}
+
 /* === song entries === */
 
 ul {
@@ -151,14 +165,10 @@ header .search button {
     cursor: pointer;
     content: 'search';
     position: absolute;
-    border: 0;
     padding: 0.5rem;
-    background: none;
     top: -0.15rem;
     right: 0.5rem;
     z-index: 1000;
-    font-size: 2rem;
-    font-family: 'Material Icons';
 }
 
 header.connected h1 {
@@ -336,22 +346,10 @@ section.player {
 
 /* === player controls === */
 
-section.player button,
-section.player button:focus,
-section.player button:active {
+section.player button {
     display: inline-block;
     height: 100%;
-    border: none;
-    padding: 0;
-    margin: 0;
-    background: none;
     color: white;
-    font-size: 2rem;
-    font-family: 'Material Icons';
-}
-
-section.player button.big {
-    font-size: 3rem;
 }
 
 /* === modal windows === */
