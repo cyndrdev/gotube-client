@@ -305,13 +305,38 @@ function doSearch() {
     });
 }
 
+function addToQueue(id) {
+    var url = getApiAddress() + "/queue/add";
+
+    queueParent
+        .append($("<li></li>")
+            .append($("<a/>", 
+                {
+                    text: searchResults[id]['title']
+                })));
+
+    $.post({
+        url: url,
+        data: JSON.stringify(searchResults[id]) 
+    })
+    .done(function () {
+        updateQueue(); 
+    })
+    .fail(function (xhr) {
+        alert(xhr.statusText);
+    });
+}
+
 $(function() {
+    // >>- global accessors -<< //
     audio = $("audio");
     source = $("audio source");
 
     resultsParent = $("#searchResults");
     queueParent = $("#queueParent");
 
+    // >>- button click binds -<< //
+    // search box
     $("#searchButton").click(doSearch);
 
     $("#searchQuery").on('keyup', function (e) {
@@ -320,42 +345,26 @@ $(function() {
         }
     });
 
-    // search result button handler 
+    // search results
     resultsParent.on("click", "li a", function () {
-        var i = parseInt($(this).attr("id"));
-        var url = getApiAddress() + "/queue/add";
-
-        var song_title = $(this).text();
-
-        queueParent
-            .append($("<li></li>")
-                .append($("<a/>", 
-                    {
-                        text: song_title
-                    })));
-
-        $.post({
-            url: url,
-            data: JSON.stringify(searchResults[i]) 
-        })
-        .done(function () {
-            updateQueue(); 
-        })
-        .fail(function (xhr) {
-            alert(xhr.statusText);
-        });
+        var id = parseInt($(this).attr("id"));
+        addToQueue(id);
     });
+
+    // server config modal
+    $("#configClose").click(hideConnectionSettings);
+
+    $("#configSettings").click(showConnectionSettings);
 
     $("#configButton").click(function() {
         saveServerDetails();
         location.reload();
     });
 
-    $("#configClose").click(hideConnectionSettings);
-    $("#configSettings").click(showConnectionSettings);
-
+    // volume slider
     $("#volumeLevel").click(showVolumeSlider);
 
+    // queue
     $("#clearQueue").click(function () {
         var url = getApiAddress() + "/queue/clear";
         var postData = { index: -1 };
@@ -377,6 +386,7 @@ $(function() {
         });
     });
 
+    // bottom bar buttons
     $(".play-pause").click(function() {
         if (playing) {
             audio.trigger('pause');
@@ -389,6 +399,7 @@ $(function() {
 
     $(".skip").click(loadNext);
 
+    // >>- audio event binds -<< //
     audio.bind("pause", function() {
         playing = false;
         $(".play-pause").text("play_circle_filled");
@@ -401,10 +412,12 @@ $(function() {
 
     audio.bind("ended", loadNext);
 
+    // volume slider bind
     $('.slider-holder input').bind("input", function() {
         setVolume(1 - (this.value / 100));
     });
 
+    // >>- initialization -<< //
     loadServerDetails();
     loadVolume();
     init();
