@@ -32,11 +32,15 @@ Number.prototype.clamp = function(min, max) {
 };
 
 /* === playback methods === */
-function playUrl(url) {
+function loadUrl(url) {
     audio.trigger('pause');
     source.attr("src", url);
     audio.trigger('load');
     audio.prop('currentTime', 0);
+}
+
+function playUrl(url) {
+    loadUrl(url);
     audio.trigger('play');
 }
 
@@ -89,11 +93,8 @@ function resetVolumeTimer() {
     volumeTimer = setTimeout(hideVolumeSlider, volumeFadeDelay);
 }
 
-function playTop() {
+function loadTop(autoplay=false) {
     if (!queue || !queue.length)
-        return;
-
-    if (playing)
         return;
 
     var apiAddr = getApiAddress();
@@ -102,14 +103,15 @@ function playTop() {
     // first get the id of the song at the top of the queue
     $.ajax({url:idUrl})
     .done(function (data) {
-        console.log(data);
+        var streamUrl = apiAddr + "/stream/" + data;
 
-        // then play the song with that id
-        playUrl(apiAddr + "/stream/" + data);
+        if (autoplay) {
+            playUrl(streamUrl);
+        } else {
+            loadUrl(streamUrl);
+        }
 
         updateArtwork(data);
-
-        playing = true;
     })
     .fail(function () {
         alert("unable to get queue top");
@@ -219,18 +221,20 @@ function getApiAddress() {
 
 function loadNext() {
     var url = getApiAddress() + "/queue/next";
+    var autoplay = (playing == true);
+
     audio.trigger('pause');
 
     $.post({url:url})
     .done(function() { 
-        updateQueue();
+        updateQueue(autoplay);
     })
     .fail(function() {
         alert("unable to load next");
     });
 }
 
-function updateQueue() {
+function updateQueue(autoplay=false) {
     var url = getApiAddress() + "/queue";
 
     $.ajax({url: url})
@@ -256,7 +260,7 @@ function updateQueue() {
 
         console.log("queue loaded of length: " + queue.length);
 
-        playTop();
+        loadTop(autoplay);
     })
     .fail(function () {
         alert("error: unable to get queue");
