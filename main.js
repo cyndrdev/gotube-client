@@ -31,6 +31,24 @@ Number.prototype.clamp = function(min, max) {
   return Math.min(Math.max(this, min), max);
 };
 
+/* === window methods === */
+function setTitle(newTitle) {
+    if (document.title != newTitle) {
+        document.title = newTitle;
+    }
+}
+
+function updateTitle() {
+    if (queue.length == 0) {
+        setTitle("gotube");
+    }
+    else {
+        var pauseText = (playing) ? "" : "[P] ";
+        currTitle = queue[0].title;
+        setTitle(pauseText + "gotube - " + currTitle);
+    }
+}
+
 /* === playback methods === */
 function loadUrl(url) {
     audio.trigger('pause');
@@ -419,15 +437,18 @@ $(function() {
     audio.bind("pause", function() {
         playing = false;
         $(".play-pause").text("play_circle_filled");
+        updateTitle();
     });
     
     audio.bind("play", function() {
         playing = true;
         $(".play-pause").text("pause_circle_filled");
+        updateTitle();
     });
 
     audio.bind("ended", function() {
         loadNext(true);
+        updateTitle();
     });
 
     // volume slider bind
