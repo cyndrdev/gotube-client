@@ -255,7 +255,7 @@ function loadNext(autoplay) {
     });
 }
 
-function updateQueue(autoplay=false) {
+function updateQueue(autoplay=false, update_only=false) {
     var url = getApiAddress() + "/queue";
 
     $.ajax({url: url})
@@ -280,6 +280,8 @@ function updateQueue(autoplay=false) {
         }
 
         console.log("queue loaded of length: " + queue.length);
+
+        if (update_only) return;
 
         loadTop(autoplay);
     })
@@ -352,6 +354,7 @@ function addToQueue(id) {
         updateQueue(); 
     })
     .fail(function (xhr) {
+        updateQueue(update_only=true);
         alert(xhr.statusText);
     });
 }
