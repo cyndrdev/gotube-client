@@ -10,6 +10,8 @@ var volumeTimer = null;
 var volumeFadeDelay = 2250;
 var volumeFadeTime = 125;
 
+var connectionCheckRate = 3000;
+
 var queue = [];
 var playing = false;
 
@@ -227,6 +229,7 @@ function init() {
 
         saveServerDetails();
         updateQueue();
+        startConnectionChecker();
     })
     .fail(function(){
         console.log("no connection D:");
@@ -357,6 +360,23 @@ function addToQueue(id) {
         updateQueue(update_only=true);
         alert(xhr.statusText);
     });
+}
+
+function startConnectionChecker() {
+    setInterval(checkConnection, connectionCheckRate);
+}
+
+function checkConnection() {
+    var url = getApiAddress() + "/ping";
+
+    $.get({url: url})
+    .done(function() {
+        console.log("ping successful.");
+    })
+    .fail(function() {
+        console.log("connection lost! retrying...");
+        location.reload();
+    })
 }
 
 $(function() {
