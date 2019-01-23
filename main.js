@@ -33,6 +33,11 @@ Number.prototype.clamp = function(min, max) {
   return Math.min(Math.max(this, min), max);
 };
 
+Number.prototype.toRandom = function() {
+    var x = Math.sin(this) * 1337;
+    return x - Math.floor(x);
+}
+
 /* === window methods === */
 function setTitle(newTitle) {
     if (document.title != newTitle) {
@@ -51,12 +56,26 @@ function updateTitle() {
     }
 }
 
+function updateColor() {
+    var hue = 320;
+    if (queue.length != 0) {
+        var currentId = queue[0].id;
+        currentId = currentId.replace('-', '+');
+        currentId = currentId.replace('_', '/');
+        var encodedData = window.atob(currentId);
+        seed = encodedData.charCodeAt(2) + 256 * encodedData.charCodeAt(3);
+        hue = seed.toRandom() * 360;
+    }
+    $("body").get(0).style.setProperty("--accent", "hsl(" + hue + ", 42%, 50%)")
+}
+
 /* === playback methods === */
 function loadUrl(url) {
     audio.trigger('pause');
     source.attr("src", url);
     audio.trigger('load');
     audio.prop('currentTime', 0);
+    updateColor();
 }
 
 function playUrl(url) {
