@@ -97,6 +97,7 @@ section.search h2 {
 
 section.search h3 {
     color: var(--text-color-lighter);
+    background-color: white;
 }
 
 section.search.empty h3 {
@@ -124,6 +125,9 @@ section.search ul li:hover a:before {
 }
 
 header {
+    z-index: 999;
+    position: relative;
+    background-color: white;
     padding: 1rem 2.5rem;
     margin-bottom: 1.5rem;
     height: 3rem;
@@ -276,12 +280,14 @@ main section h2 {
 
 /* === queue === */
 section.queue {
+    z-index: 99;
     max-width: 100%;
     width: calc(25% + 14rem);
     position: fixed;
     right: 2.5rem;
     bottom: 5rem;
     box-shadow: 0 0 0.5rem rgba(0,0,0,0.5);
+    background-color: white;
 }
 
 section.queue img {

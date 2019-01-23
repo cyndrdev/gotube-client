@@ -223,9 +223,8 @@ function getApiAddress() {
     return `http://${address}:${port}`;
 }
 
-function loadNext() {
+function loadNext(autoplay) {
     var url = getApiAddress() + "/queue/next";
-    var autoplay = (playing == true);
 
     audio.trigger('pause');
 
@@ -412,7 +411,9 @@ $(function() {
 
     $(".restart").click(restart);
 
-    $(".skip").click(loadNext);
+    $(".skip").click(function() {
+        loadNext(playing);
+    });
 
     // >>- audio event binds -<< //
     audio.bind("pause", function() {
@@ -425,7 +426,9 @@ $(function() {
         $(".play-pause").text("pause_circle_filled");
     });
 
-    audio.bind("ended", loadNext);
+    audio.bind("ended", function() {
+        loadNext(true);
+    });
 
     // volume slider bind
     $('.slider-holder input').bind("input", function() {
