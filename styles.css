@@ -368,7 +368,7 @@ section.player button {
 .modal {
     width: 30rem;
     position: absolute;
-    z-index: 10;
+    z-index: 1000000;
 
     top: 30%;
     left: calc(50% - 15rem);
@@ -386,7 +386,7 @@ section.player button {
 }
 
 .modal-hider {
-    z-index: 1;
+    z-index: 999999;
     position: fixed;
     top: 0;
     left: 0;

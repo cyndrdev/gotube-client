@@ -175,6 +175,7 @@ function hideModals() {
 }
 
 function showConnectionSettings() {
+    hideVolumeSlider();
     $('.modal-hider').fadeIn(modalFadeTime);
     $('.config').fadeIn(modalFadeTime);
 }
