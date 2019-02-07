@@ -63,6 +63,15 @@ function updateTitle() {
     }
 }
 
+function getSeed(stringSeed) {
+    var acc = 0;
+    for (var i = 0; i < stringSeed.length; i++) {
+        acc *= 256;
+        acc += stringSeed.charCodeAt(i);
+    }
+    return acc;
+}
+
 function updateColor() {
     var hue = 320;
     if (queue.length != 0) {
@@ -70,7 +79,7 @@ function updateColor() {
         currentId = currentId.replace('-', '+');
         currentId = currentId.replace('_', '/');
         var encodedData = window.atob(currentId);
-        seed = encodedData.charCodeAt(2) + 256 * encodedData.charCodeAt(3);
+        seed = getSeed(encodedData);
         hue = seed.toRandom() * 360;
     }
     $("body").get(0).style.setProperty("--accent", "hsl(" + hue + ", 42%, 50%)")
@@ -78,10 +87,7 @@ function updateColor() {
 
 function updateSearchButton() {
     var query = $("#searchQuery").val();
-    console.log(query);
-    //var buttonIcon = youtubeUrlRegex.test(query) ? "add" : "search";
     var buttonIcon = query.match(youtubeUrlRegex) ? "add" : "search";
-    console.log(buttonIcon);
     $("#searchButton").text(buttonIcon);
 }
 
@@ -269,7 +275,7 @@ function init() {
         startConnectionChecker();
     })
     .fail(function(){
-        console.log("no connection D:");
+        console.log("error: no connection.");
         showConnectionSettings();
     });
 }
@@ -309,8 +315,6 @@ function updateQueue(autoplay=false, update_only=false) {
         queueParent.html("");
 
         for (var i = 0; i < queue.length; i++) {
-            console.log(queue[i].title);
-
             queueParent
                 .append($("<li></li>")
                 .append($("<a/>",
@@ -319,7 +323,7 @@ function updateQueue(autoplay=false, update_only=false) {
                 })));
         }
 
-        console.log("queue loaded of length: " + queue.length);
+        console.log("successfully loaded queue of length " + queue.length + ".");
 
         if (update_only) return;
 
@@ -344,7 +348,7 @@ function searchHandler() {
 }
 
 function doSearch(query) {
-    console.log("search: " + query); 
+    console.log("searching for : '" + query + "'"); 
 
     var url = getApiAddress() + "/search";
     var postData = JSON.stringify({
@@ -365,7 +369,6 @@ function doSearch(query) {
         $(".search h3").text(query);
 
         searchResults = JSON.parse(data);
-        console.log(data);
 
         // create a list element with a button for each result
         for (var i = 0; i < searchResults.length; i++) {
@@ -380,18 +383,16 @@ function doSearch(query) {
         }
     })
     .fail(function () {
-        alert("search failed");
+        alert("search failed!");
     })
     .always(function () {
-        console.log("search complete");
+        console.log("search complete.");
     });
 }
 
 function addResultToQueue(id) {
     var youtubeId = searchResults[id]['id'];
     var title = searchResults[id]['title'];
-
-    console.log(youtubeId);
 
     addToQueue(youtubeId, title);
 }
@@ -429,7 +430,8 @@ function checkConnection() {
 
     $.get({url: url})
     .done(function() {
-        console.log("ping successful.");
+        // NOTE: removed due to console spam.
+        //console.log("ping successful.");
     })
     .fail(function() {
         console.log("connection lost! retrying...");
@@ -484,8 +486,6 @@ $(function() {
         var url = getApiAddress() + "/queue/clear";
         var postData = { index: -1 };
 
-        console.log(JSON.stringify(postData)); 
-
         // clear queue display
         queueParent.html("");
 
@@ -494,7 +494,7 @@ $(function() {
             data: JSON.stringify(postData)
         })
         .done(function () {
-            console.log("server queue cleared"); 
+            console.log("server queue cleared."); 
         })
         .fail(function (xhr) {
             alert(xhr.statusText);
