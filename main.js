@@ -47,14 +47,19 @@ function setTitle(newTitle) {
     }
 }
 
+function setIcon(newIcon) {
+    $("#favicon").attr("href", "icons/" + newIcon + ".png");
+}
+
 function updateTitle() {
     if (queue.length == 0) {
         setTitle("gotube");
+        setIcon("loading");
     }
     else {
-        var pauseText = (playing) ? "" : "[P] ";
+        setIcon((playing) ? "play" : "pause");
         currTitle = queue[0].title;
-        setTitle(pauseText + "gotube - " + currTitle);
+        setTitle("gotube - " + currTitle);
     }
 }
 
@@ -407,10 +412,10 @@ function addToQueue(id, title) {
         data: data
     })
     .done(function () {
-        updateQueue(playing, true); 
+        updateQueue(playing, update_only=true); 
     })
     .fail(function (xhr) {
-        updateQueue(update_only=true);
+        updateQueue(playing, update_only=true);
         alert(xhr.statusText);
     });
 }
