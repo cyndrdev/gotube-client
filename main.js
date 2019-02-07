@@ -407,7 +407,7 @@ function addToQueue(id, title) {
         data: data
     })
     .done(function () {
-        updateQueue(); 
+        updateQueue(playing, true); 
     })
     .fail(function (xhr) {
         updateQueue(update_only=true);
