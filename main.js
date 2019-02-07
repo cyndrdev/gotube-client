@@ -7,7 +7,8 @@ var audio = null;
 var source = null;
 
 var volumeTimer = null;
-var volumeFadeDelay = 250;
+//var volumeFadeDelay = 250;
+var volumeFadeDelay = 2500000;
 var volumeFadeTime = 125;
 
 var connectionCheckRate = 3000;
@@ -110,7 +111,7 @@ function loadVolume() {
     var level = Cookies.get(volumeCookie);
     if (level !== undefined) {
         setVolume(level);
-        var range = Math.round((1 - level) * 100);
+        var range = Math.round(level * 100);
         $(".slider-holder input").prop("value", range);
     }
 }
@@ -119,7 +120,7 @@ function setVolume(level) {
     resetVolumeTimer();
 
     level = Number(level).clamp(0, 1);
-    audio.prop('volume', level);
+    audio.prop('volume', level * level);
     Cookies.set(volumeCookie, level);
     
     // fix bugs related to anti-autoplay features 
@@ -536,7 +537,7 @@ $(function() {
 
     // volume slider bind
     $('.slider-holder input').bind("input", function() {
-        setVolume(1 - (this.value / 100));
+        setVolume(this.value / 100);
     });
 
     $('.slider-holder').hover(
