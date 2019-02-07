@@ -15,6 +15,8 @@ var connectionCheckRate = 3000;
 var queue = [];
 var playing = false;
 
+var youtubeUrlRegex = /(?:https?:\/\/)?(?:www\.)?youtube\.com\/(?:watch\?(?:.*)v=|v\/)([\w\-]+)/;
+
 var serverCookie = "gotube_ip";
 var portCookie = "gotube_port";
 var volumeCookie = "gotube_volume";
@@ -68,6 +70,16 @@ function updateColor() {
     }
     $("body").get(0).style.setProperty("--accent", "hsl(" + hue + ", 42%, 50%)")
 }
+
+function updateSearchButton() {
+    var query = $("#searchQuery").val();
+    console.log(query);
+    //var buttonIcon = youtubeUrlRegex.test(query) ? "add" : "search";
+    var buttonIcon = query.match(youtubeUrlRegex) ? "add" : "search";
+    console.log(buttonIcon);
+    $("#searchButton").text(buttonIcon);
+}
+
 
 /* === playback methods === */
 function loadUrl(url) {
@@ -313,9 +325,20 @@ function updateQueue(autoplay=false, update_only=false) {
     });
 }
 
-function doSearch() {
+function searchHandler() {
     var query = $("#searchQuery").val();
 
+    if (youtubeUrlRegex.test(query)) {
+        var match = youtubeUrlRegex.exec(query);
+        addToQueue(match[1], "[FIXME]");
+        $("#searchQuery").val("");
+    } 
+    else {
+        doSearch(query);
+    }
+}
+
+function doSearch(query) {
     console.log("search: " + query); 
 
     var url = getApiAddress() + "/search";
@@ -359,19 +382,29 @@ function doSearch() {
     });
 }
 
-function addToQueue(id) {
+function addResultToQueue(id) {
+    var youtubeId = searchResults[id]['id'];
+    var title = searchResults[id]['title'];
+
+    console.log(youtubeId);
+
+    addToQueue(youtubeId, title);
+}
+
+function addToQueue(id, title) {
     var url = getApiAddress() + "/queue/add";
+    var data = JSON.stringify({id:id, title:title});
 
     queueParent
         .append($("<li></li>")
             .append($("<a/>", 
                 {
-                    text: searchResults[id]['title']
+                    text: title
                 })));
 
     $.post({
         url: url,
-        data: JSON.stringify(searchResults[id]) 
+        data: data
     })
     .done(function () {
         updateQueue(); 
@@ -409,18 +442,20 @@ $(function() {
 
     // >>- button click binds -<< //
     // search box
-    $("#searchButton").click(doSearch);
+    $("#searchButton").click(searchHandler);
 
     $("#searchQuery").on('keyup', function (e) {
         if (e.keyCode == 13) {
-            doSearch();
+            searchHandler();
         }
     });
+
+    $("#searchQuery").on('input', updateSearchButton);
 
     // search results
     resultsParent.on("click", "li a", function () {
         var id = parseInt($(this).attr("id"));
-        addToQueue(id);
+        addResultToQueue(id);
     });
 
     // all modals
