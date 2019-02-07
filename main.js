@@ -7,7 +7,7 @@ var audio = null;
 var source = null;
 
 var volumeTimer = null;
-var volumeFadeDelay = 2250;
+var volumeFadeDelay = 250;
 var volumeFadeTime = 125;
 
 var connectionCheckRate = 3000;
@@ -538,6 +538,15 @@ $(function() {
     $('.slider-holder input').bind("input", function() {
         setVolume(1 - (this.value / 100));
     });
+
+    $('.slider-holder').hover(
+        function() {
+            this.iid = setInterval(resetVolumeTimer, 25);
+        }, 
+        function() {
+            this.iid && clearInterval(this.iid);
+        }
+    )
 
     // >>- initialization -<< //
     loadServerDetails();
