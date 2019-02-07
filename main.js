@@ -7,8 +7,7 @@ var audio = null;
 var source = null;
 
 var volumeTimer = null;
-//var volumeFadeDelay = 250;
-var volumeFadeDelay = 2500000;
+var volumeFadeDelay = 250;
 var volumeFadeTime = 125;
 
 var connectionCheckRate = 3000;
