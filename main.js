@@ -399,7 +399,7 @@ function addResultToQueue(id) {
 
 function addToQueue(id, title) {
     var url = getApiAddress() + "/queue/add";
-    var data = JSON.stringify({id:id, title:title});
+    var data = id;
 
     queueParent
         .append($("<li></li>")
