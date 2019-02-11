@@ -413,7 +413,10 @@ function addToQueue(id, title) {
         data: data
     })
     .done(function () {
-        updateQueue(playing, update_only=true); 
+        // if the queue was previously empty, automatically start playing.
+        var newQueue = (queue.length == 0);
+        if (newQueue) playing = true;
+        updateQueue(playing, update_only=!newQueue); 
     })
     .fail(function (xhr) {
         updateQueue(playing, update_only=true);
