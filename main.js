@@ -10,7 +10,7 @@ var volumeTimer = null;
 var volumeFadeDelay = 250;
 var volumeFadeTime = 125;
 
-var connectionCheckRate = 3000;
+var connectionCheckRate = 15000;
 
 var queue = [];
 var playing = false;
