@@ -339,7 +339,7 @@ function searchHandler() {
 
     if (youtubeUrlRegex.test(query)) {
         var match = youtubeUrlRegex.exec(query);
-        addToQueue(match[1], "[FIXME]");
+        addToQueue(match[1]);
         $("#searchQuery").val("");
     } 
     else {
@@ -397,16 +397,40 @@ function addResultToQueue(id) {
     addToQueue(youtubeId, title);
 }
 
-function addToQueue(id, title) {
+function addToQueue(id, title = null) {
     var url = getApiAddress() + "/queue/add";
     var data = id;
 
-    queueParent
-        .append($("<li></li>")
-            .append($("<a/>", 
-                {
-                    text: title
-                })));
+    if (title == null) {
+        var lookupUrl = getApiAddress() + "/info/" + id;
+        // title isn't given, look it up
+        queueParent
+            .append($("<li></li>")
+                .append($("<a/>", 
+                    {
+                        text: "[Loading Info...]",
+                        id: "yt" + id,
+                        class: "title-pending"
+                    })));
+        $.get({url:lookupUrl})
+        .done(function(data) {
+            var elem = $(".title-pending#yt" + id);
+            var result = JSON.parse(data);
+            elem.text(result.title);
+            elem.removeClass("title-pending");
+        })
+        .fail(function() {
+            $(".title-pending#yt" + id).remove();
+        })
+    }
+    else {
+        queueParent
+            .append($("<li></li>")
+                .append($("<a/>", 
+                    {
+                        text: title
+                    })));
+    }
 
     $.post({
         url: url,
