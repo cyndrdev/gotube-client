@@ -173,15 +173,15 @@ function loadTop(autoplay=false) {
             loadUrl(streamUrl);
         }
 
-        updateArtwork(data);
+        updateArtwork();
     })
     .fail(function () {
         alert("unable to get queue top");
     });
 }
 
-function updateArtwork(data) {
-    var arturl = "https://img.youtube.com/vi/" + data + "/maxresdefault.jpg";
+function updateArtwork() {
+    var arturl = queue[0].thumbnail;
 
     var artwork = $("img.artwork");
 
