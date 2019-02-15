@@ -13,6 +13,11 @@
     --accent-2: #7ecdab;
 }
 
+/* === animation === */
+@-moz-keyframes spin { 100% { -moz-transform: rotate(-360deg); } }
+@-webkit-keyframes spin { 100% { -webkit-transform: rotate(-360deg); } }
+@keyframes spin { 100% { -webkit-transform: rotate(-360deg); transform: rotate(-360deg); } }
+
 /* === font setup === */
 
 h1, h2, h3, h4, h5, h6,
@@ -369,6 +374,25 @@ section.queue #clearQueue {
 
     font-size: 2rem;
     font-family: 'Material Icons';
+}
+
+section.queue ul li a.unvalidated {
+    background-color: red;
+}
+
+section.queue ul li a.unvalidated::before {
+    content: 'cached';
+    animation:          spin 1s linear infinite;
+    -moz-animation:     spin 1s linear infinite;
+    -webkit-animation:  spin 1s linear infinite;
+}
+
+section.queue ul li a.validated {
+    background-color: green;
+}
+
+section.queue ul li a.validated::before {
+    content: 'done';
 }
 
 /* === player === */

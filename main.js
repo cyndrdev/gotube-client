@@ -319,7 +319,8 @@ function updateQueue(autoplay=false, update_only=false) {
                 .append($("<li></li>")
                 .append($("<a/>",
                 {
-                    text: queue[i].title
+                    text: queue[i].title,
+                    class: "validated"
                 })));
         }
 
@@ -339,7 +340,7 @@ function searchHandler() {
 
     if (youtubeUrlRegex.test(query)) {
         var match = youtubeUrlRegex.exec(query);
-        addToQueue(match[1]);
+        queueSong(match[1]);
         $("#searchQuery").val("");
     } 
     else {
@@ -394,44 +395,57 @@ function addResultToQueue(id) {
     var youtubeId = searchResults[id]['id'];
     var title = searchResults[id]['title'];
 
-    addToQueue(youtubeId, title);
+    queueSong(youtubeId, title);
 }
 
 function addToQueue(id, title = null) {
+    var validateInfo = (title == null);
+    queueParent.append($("<li></li>")
+    .append($("<a/>", 
+    {
+        text:   validateInfo ? "[Loading Info...]" : title,
+        id:     "yt" + id,
+        class:  "unvalidated" + ((validateInfo) ? " noinfo" : "")
+    })));
+
+    if (validateInfo) {
+        var lookupUrl = getApiAddress() + "/info/" + id;
+        $.get({url:lookupUrl})
+        .done(function(data){
+            validateQueueInfo(id, data)
+        })
+        .fail(function(){
+            invalidateQueueItem(id);
+        })
+    }
+}
+
+function validateQueueInfo(id, data) {
+    var elem = queueParent.find(".noinfo#yt" + id);
+    var result = JSON.parse(data);
+    elem.text(result.title);
+    elem.removeClass("noinfo");
+}
+
+function validateQueueDownload(id, autoplay = false) {
+    var elem = queueParent.find(".unvalidated#yt" + id);
+    elem.addClass("validated");
+    elem.removeClass("unvalidated");
+    if (autoplay) {
+        loadTop(true);
+    }
+}
+
+function invalidateQueueItem(id) {
+    var elem = queueParent.find(".unvalidated#yt" + id);
+    elem.remove();
+}
+
+function queueSong(id, title = null) {
     var url = getApiAddress() + "/queue/add";
     var data = id;
 
-    if (title == null) {
-        var lookupUrl = getApiAddress() + "/info/" + id;
-        // title isn't given, look it up
-        queueParent
-            .append($("<li></li>")
-                .append($("<a/>", 
-                    {
-                        text: "[Loading Info...]",
-                        id: "yt" + id,
-                        class: "title-pending"
-                    })));
-        $.get({url:lookupUrl})
-        .done(function(data) {
-            var elem = $(".title-pending#yt" + id);
-            var result = JSON.parse(data);
-            elem.text(result.title);
-            elem.removeClass("title-pending");
-        })
-        .fail(function() {
-            $(".title-pending#yt" + id).remove();
-        })
-    }
-    else {
-        queueParent
-            .append($("<li></li>")
-                .append($("<a/>", 
-                    {
-                        text: title
-                    })));
-    }
-
+    addToQueue(id, title);
     $.post({
         url: url,
         data: data
@@ -440,10 +454,10 @@ function addToQueue(id, title = null) {
         // if the queue was previously empty, automatically start playing.
         var newQueue = (queue.length == 0);
         if (newQueue) playing = true;
-        updateQueue(playing, update_only=!newQueue); 
+        validateQueueDownload(id, playing);
     })
     .fail(function (xhr) {
-        updateQueue(playing, update_only=true);
+        invalidateQueueItem(id);
         alert(xhr.statusText);
     });
 }
