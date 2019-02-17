@@ -447,12 +447,15 @@ function invalidateQueueItem(id) {
 
 function queueSong(id, title = null) {
     var url = getApiAddress() + "/queue/add";
-    var data = id;
+    var postData = {
+        id: id,
+        position: -1
+    }
 
     addToQueue(id, title);
     $.post({
         url: url,
-        data: data
+        data: JSON.stringify(postData)
     })
     .done(function () {
         // if the queue was previously empty, automatically start playing.
