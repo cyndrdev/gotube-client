@@ -119,6 +119,10 @@ function loadVolume() {
         var range = Math.round(level * 100);
         $(".slider-holder input").prop("value", range);
     }
+    else {
+        setVolume(0.5)
+        $(".slider-holder input").prop("value", 50);
+    }
 }
 
 function setVolume(level) {

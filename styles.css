@@ -13,6 +13,20 @@
     --accent-2: #7ecdab;
 }
 
+/* === dark mode === */
+@media (prefers-dark-interface) {
+    :root {
+    --text-color: #ccc;
+    --text-color-soft: #999;
+    --background: #000000;
+    --background-alt: #0d0d0d;
+    --background-topbar: var(--background);
+    --shadow: rgba(235, 255, 255, 0.5);
+    --accent: #b54b92;
+    --accent-2: #7ecdab;
+    }
+}
+
 /* === animation === */
 @-moz-keyframes spin { 100% { -moz-transform: rotate(-360deg); } }
 @-webkit-keyframes spin { 100% { -webkit-transform: rotate(-360deg); } }
@@ -377,10 +391,14 @@ section.queue #clearQueue {
 }
 
 section.queue ul li a.unvalidated {
-    background-color: red;
+    background-color: var(--background-alt);
 }
 
 section.queue ul li a.unvalidated::before {
+    display: block;
+    height: 1.6rem;
+    width: 1.6rem;
+    text-align: center;
     content: 'cached';
     animation:          spin 1s linear infinite;
     -moz-animation:     spin 1s linear infinite;
@@ -388,7 +406,7 @@ section.queue ul li a.unvalidated::before {
 }
 
 section.queue ul li a.validated {
-    background-color: green;
+    /* background-color: green; */
 }
 
 section.queue ul li a.validated::before {
